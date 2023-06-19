@@ -40,13 +40,15 @@ export class ApicallService {
   }
 
 
-  postActions(name : string, value : string){
-    if(name == "" && value == "")
+  postActions(name : string, controlType : string, controlID : string, value : string){
+    if(name == "" || value == "" || controlType == "" || controlID == "")
       return
 
     let body = {
       "Action" : {
         "name" : name,
+        "controlType" : controlType,
+        "controlID" : controlID,
         "value" : value
       }
     }

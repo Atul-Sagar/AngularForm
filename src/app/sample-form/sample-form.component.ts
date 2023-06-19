@@ -84,10 +84,49 @@ export class SampleFormComponent implements OnInit {
     
     if(currentAction[0].ID > this.lastActionDone){
       let ngmodelname = currentAction[0].name;
+      let ngmodeltype = currentAction[0].controlType;
       let ngmodelvalue = currentAction[0].value;
+      let ngmodelID = currentAction[0].controlID;
 
       console.log("Name : ", ngmodelname);
+      console.log("Type : ", ngmodeltype)
       console.log("Value : ", ngmodelvalue);
+      console.log("ID : ", ngmodelID);
+      
+
+      switch(ngmodeltype){
+        case "radio":
+          let radiobutton = <HTMLInputElement>document.getElementById(ngmodelID);
+          radiobutton.checked = true;
+          this.lastActionDone = currentAction[0].ID
+          break;
+        case "checkbox":
+          let checkbox = <HTMLInputElement>document.getElementById(ngmodelID);
+          checkbox.checked = true;
+          this.lastActionDone = currentAction[0].ID
+          break;
+        case "select-one":
+          let dropdown = <HTMLInputElement>document.getElementById(ngmodelID);
+          dropdown.value = ngmodelvalue;
+          break;
+        case "text":
+          var input = <HTMLInputElement>document.getElementById(ngmodelID);
+          input.value = ngmodelvalue;
+          break;
+        case "submit":
+          var button = <HTMLButtonElement>document.getElementById(ngmodelID);
+          alert("button clicked");
+          button.click();
+          break;
+        default:
+          console.log("invalid type");
+          
+          break;
+      }
+
+      if(ngmodeltype == 'radio'){
+        
+      }
 
       // let  input = document.getElementsByName(ngmodelname)<HTMLInputElement>;
       var input = <HTMLInputElement>document.getElementsByName(ngmodelname)[0];
@@ -96,13 +135,15 @@ export class SampleFormComponent implements OnInit {
       input.value = ngmodelvalue
       // input.innerHTML = ngmodelvalue
       
-      this.lastActionDone = currentAction[0].ID
+      // this.lastActionDone = currentAction[0].ID
 
     }
     
   }
 
   async onInputChange(event : any){
+
+
 
     let role = this.checkRole();
     console.log("Role : ", role);
@@ -115,9 +156,11 @@ export class SampleFormComponent implements OnInit {
     console.log(event);
     let name : string = event.srcElement.name;
     let value : string = event.target.value;
+    let controlType : string = event.srcElement.type;
+    let controlID : string = event.srcElement.id;
 
 
-    this.api.postActions(name, value)?.subscribe(
+    this.api.postActions(name,controlType,controlID,value)?.subscribe(
       (response) => {
         console.log("Response : ", response);
         // alert(response)      
